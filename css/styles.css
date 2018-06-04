@@ -15,7 +15,7 @@ body {
 ul, li {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 10pt;
-	color: #333;
+  color: #333;
 }
 a {
 	color: orange;
@@ -145,7 +145,7 @@ nav h1 a {
   min-height: 380px;
   padding: 0 30px 25px;
   text-align: left;
-  width: 270px;
+  width: 90%;
 }
 #restaurants-list .restaurant-img {
   background-color: #ccc;
