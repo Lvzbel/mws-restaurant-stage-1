@@ -1,0 +1,25 @@
+{
+  "name": "mws-restaurant-stage-1",
+  "version": "1.0.0",
+  "description": "Google Scholarship Stage 1",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lvzbel/mws-restaurant-stage-1.git"
+  },
+  "author": "Rodrigo Coto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lvzbel/mws-restaurant-stage-1/issues"
+  },
+  "homepage": "https://github.com/Lvzbel/mws-restaurant-stage-1#readme",
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-gm": "0.0.9",
+    "gulp-imagemin": "^4.1.0",
+    "gulp-newer": "^1.4.0"
+  }
+}
