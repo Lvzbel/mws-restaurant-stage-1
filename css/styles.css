@@ -329,3 +329,20 @@ footer {
   margin: auto; */
 }
 
+/* SKIP LINK STYLES */
+.skip-link {
+  position: absolute;
+  top: -50px;
+  left: 0px;
+  background: #bf1722;
+  color: white;
+  padding: 8px;
+  z-index: 1000;
+  transition: all .5s;
+}
+
+.skip-link:focus {
+  top: 0px;
+  color: white;
+  outline: none;
+}
