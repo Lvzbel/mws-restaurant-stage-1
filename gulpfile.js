@@ -13,3 +13,15 @@ gulp.task('default', function () {
   .pipe(imagemin())
   .pipe(gulp.dest('img/responsive_img'));
 });
+
+gulp.task('img', () =>
+	gulp.src('img/*')
+		.pipe(imagemin())
+		.pipe(gulp.dest('img/responsive_img'))
+);
+
+gulp.task('compress-images', function () {
+  return gulp.src('img/*')
+    .pipe(imagemin({ progressive: true }))
+    .pipe(gulp.dest('.dist/images'));
+})
