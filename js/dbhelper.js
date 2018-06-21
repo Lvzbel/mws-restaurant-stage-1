@@ -154,6 +154,13 @@ class DBHelper {
   }
 
   /**
+   * Responsive image only gets the name of the picture by id wihout getting the extension, extension will be added in later
+   */
+  static imageUrlForRestaurant_responsive (restaurant) {
+    return (`img/responsive_img/${restaurant.id}`);
+  }
+
+  /**
    * Map marker for a restaurant.
    */
   static mapMarkerForRestaurant(restaurant, map) {

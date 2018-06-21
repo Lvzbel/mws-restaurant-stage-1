@@ -4,6 +4,22 @@ let restaurants,
 var map
 var markers = []
 
+// =====================================
+// Checking if Service Worker is avaible
+// =====================================
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register('./service-worker.js', {scope: './'})
+      .then(function (registration) {
+          console.log('ServiceWorker Register');
+      })
+      .catch(function (e) {
+           console.log('error')
+          console.error(e);
+      })
+} else {
+  console.log('Service Worker is not supported in this browser.');
+}
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
@@ -138,11 +154,36 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
+  // const image = document.createElement('img');
+  // image.className = 'restaurant-img';
+  // image.setAttribute("alt", restaurant.name)
+  // image.src = DBHelper.imageUrlForRestaurant(restaurant);
+
+  // image.src = `${DBHelper.imageUrlForRestaurant_responsive(restaurant)}_large_2x.jpg`;
+  const imageID = DBHelper.imageUrlForRestaurant_responsive(restaurant);
+  const figure = document.createElement('figure');
+  const picture = document.createElement('picture');
+  const sourceLarge = document.createElement('source');
+  const sourceSmall = document.createElement('source');
   const image = document.createElement('img');
+  const figCaption = document.createElement('figcaption');
+
+  sourceLarge.setAttribute('media', '(min-width: 501px && max-width: 699px)');
+  sourceLarge.setAttribute('srcset', `${imageID}_large_2x.jpg 2x, ${imageID}_large_1x.jpg`);
+  sourceSmall.setAttribute('media', '(max-width: 500px || min-width: 700px)');
+  sourceSmall.setAttribute('srcset', `${imageID}_small_2x.jpg 2x, ${imageID}_small_1x.jpg`);
   image.className = 'restaurant-img';
-  image.setAttribute("alt", restaurant.name)
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  li.append(image);
+  image.setAttribute("alt", restaurant.name)
+  figCaption.textContent = restaurant.name;
+  figure.append(picture);
+  figure.append(figCaption)
+  picture.append(sourceLarge);
+  picture.append(sourceSmall);
+  picture.append(image);
+  li.append(figure);
+
+
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;

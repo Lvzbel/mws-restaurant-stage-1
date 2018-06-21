@@ -1,45 +1,52 @@
 var gulp = require('gulp');
-var gm = require('gulp-gm');
-var newer = require('gulp-newer');
-var imagemin = require('gulp-imagemin');
 var responsive = require('gulp-responsive');
-var responsive = require('gulp-responsive');
+var rename = require("gulp-rename");
 
-// gulp.task('default', function () {
-//   gulp.src('img/*')
-//   .pipe(newer('resized'))
-//   .pipe(gm(function(gmfile) {
-//     gmfile.setFormat('jpg').quality(90);
-//     return gmfile.resize(400, 300);
-//   }))
-//   .pipe(imagemin())
-//   .pipe(gulp.dest('img/responsive_img'));
-// });
-
-// gulp.task('img', () =>
-// 	gulp.src('img/*')
-// 		.pipe(imagemin())
-// 		.pipe(gulp.dest('img/responsive_img'))
-// );
-
-gulp.task('compress-images', function () {
-  return gulp.src('img/*')
-    .pipe(imagemin({ progressive: true }))
-    .pipe(gulp.dest('.dist/images'));
-})
-
-gulp.task('default', function () {
+gulp.task('image_1', function () {
   return gulp.src('img/*.jpg')
     .pipe(responsive({
       '*.jpg': {
-        width: 400,
-        quality: 50,
-        rename: name + '_large_2x.jpg'
+        quality: 70
       }
     }))
+    .pipe(rename(function (path) {path.basename += '_large_2x'}))
     .pipe(gulp.dest('img/responsive_img'));
 });
 
+gulp.task('image_2', function () {
+  return gulp.src('img/*.jpg')
+    .pipe(responsive({
+      '*.jpg': {
+        quality: 50
+      }
+    }))
+    .pipe(rename(function (path) {path.basename += '_large_1x'}))
+    .pipe(gulp.dest('img/responsive_img'));
+});
+
+gulp.task('image_3', function () {
+  return gulp.src('img/*.jpg')
+    .pipe(responsive({
+      '*.jpg': {
+        width: 500,
+        quality: 70
+      }
+    }))
+    .pipe(rename(function (path) {path.basename += '_small_2x'}))
+    .pipe(gulp.dest('img/responsive_img'));
+});
+
+gulp.task('image_4', function () {
+  return gulp.src('img/*.jpg')
+    .pipe(responsive({
+      '*.jpg': {
+        width: 500,
+        quality: 50
+      }
+    }))
+    .pipe(rename(function (path) {path.basename += '_small_1x'}))
+    .pipe(gulp.dest('img/responsive_img'));
+});
 
 // Original:  70 quality              _large_2x.jpg
 // quality: 50 quality                _large_1x.jpg
