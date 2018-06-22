@@ -1,3 +1,7 @@
+// ServiceWorker was created by fallowing the tutorial made by bitsofcode https://www.youtube.com/channel/UCaJvzHE_y3MhbDLrsa4FfJQ/videos
+// and the guide located at https://www.sitepoint.com/getting-started-with-service-workers/
+
+
 var cacheName = 'v1';
 var cacheFiles = [
   './',
