@@ -2,7 +2,7 @@
 // and the guide located at https://www.sitepoint.com/getting-started-with-service-workers/
 
 
-var cacheName = 'v1';
+var cacheName = 'v2';
 var cacheFiles = [
   './',
   './index.html',

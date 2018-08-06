@@ -1,3 +1,36 @@
+const dbPromise = idb.open('restaurants-db', 5, (upgradeDb) => {
+  const keyStore = upgradeDb.createObjectStore('restaurants', {
+    keyPath: 'id'
+  })
+})
+
+const storeRestaurantsDb = (restaurants) => {
+  let test = restaurants
+  dbPromise.then(function(db) {
+    var tx = db.transaction('restaurants', 'readwrite');
+    var keyValStore = tx.objectStore('restaurants');
+    test.forEach(restaurant => {
+      keyValStore.put(restaurant)
+    });
+    return tx.complete;
+  }).then(function() {
+    console.log('Added foo:bar to keyval');
+  });
+}
+
+const getAllRestaurantsDb = () => {
+  let restaurantFromDb
+  dbPromise.then((db) => {
+    const tx = db.transaction('restaurants');
+    const keyValStore = tx.objectStore('restaurants');
+    return keyValStore.getAll();
+  })
+  .then((val) => {
+    return val
+  });
+  // console.log('inside',restaurantFromDb)
+  // return restaurantFromDb
+}
 /**
  * Common database helper functions.
  */
@@ -8,8 +41,8 @@ class DBHelper {
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    const port = 8000 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
+    const port = 1337 // Change this to your server port
+    return `http://localhost:${port}/restaurants`;
   }
 
   /**
@@ -21,7 +54,9 @@ class DBHelper {
     xhr.onload = () => {
       if (xhr.status === 200) { // Got a success response from server!
         const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
+        storeRestaurantsDb(json);
+        const restaurants = getAllRestaurantsDb();
+        console.log('testing', restaurants);
         callback(null, restaurants);
       } else { // Oops!. Got an error from server.
         const error = (`Request failed. Returned status of ${xhr.status}`);
@@ -148,16 +183,31 @@ class DBHelper {
 
   /**
    * Restaurant image URL.
+   * Error checking due to restaurant #10 does not have a photo property
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    const photo = restaurant.photograph;
+
+    if (photo === undefined) {
+      return (`/img/error.jpg`);
+    } else {
+      return (`/img/${restaurant.photograph}.jpg`);
+    }
   }
 
   /**
    * Responsive image only gets the name of the picture by id wihout getting the extension, extension will be added in later
+   * Error checking due to restaurant #10 does not have a photo property
    */
-  static imageUrlForRestaurant_responsive (restaurant) {
-    return (`img/responsive_img/${restaurant.id}`);
+  static imageUrlForRestaurant_responsive(restaurant) {
+
+    const photo = restaurant.photograph;
+
+    if (photo === undefined) {
+      return (`img/responsive_img/error`);
+    } else {
+      return (`img/responsive_img/${restaurant.id}`);
+    }
   }
 
   /**
@@ -169,8 +219,8 @@ class DBHelper {
       title: restaurant.name,
       url: DBHelper.urlForRestaurant(restaurant),
       map: map,
-      animation: google.maps.Animation.DROP}
-    );
+      animation: google.maps.Animation.DROP
+    });
     return marker;
   }
 

@@ -8,14 +8,16 @@ var markers = []
 // Checking if Service Worker is avaible
 // =====================================
 if (navigator.serviceWorker) {
-  navigator.serviceWorker.register('./service-worker.js', {scope: './'})
-      .then(function (registration) {
-          console.log('ServiceWorker Register');
-      })
-      .catch(function (e) {
-           console.log('error')
-          console.error(e);
-      })
+  navigator.serviceWorker.register('./service-worker.js', {
+      scope: './'
+    })
+    .then(function (registration) {
+      console.log('ServiceWorker Register');
+    })
+    .catch(function (e) {
+      console.log('error')
+      console.error(e);
+    })
 } else {
   console.log('ServiceWorker not supported.');
 }
