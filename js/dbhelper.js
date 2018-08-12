@@ -13,24 +13,33 @@ const storeRestaurantsDb = (restaurants) => {
       keyValStore.put(restaurant)
     });
     return tx.complete;
-  }).then(function() {
-    console.log('Added foo:bar to keyval');
-  });
+  })
 }
 
-const getAllRestaurantsDb = () => {
-  let restaurantFromDb
-  dbPromise.then((db) => {
+// function getAllRestaurantsDb1 () {
+//   dbPromise.then((db) => {
+//     const tx = db.transaction('restaurants');
+//     const keyValStore = tx.objectStore('restaurants');
+//     console.log('inside the thing');
+//     return keyValStore.getAll();
+//   });
+// }
+
+
+const getAllRestaurantsDb = (callback) => {
+  return dbPromise.then((db) => {
     const tx = db.transaction('restaurants');
     const keyValStore = tx.objectStore('restaurants');
-    return keyValStore.getAll();
+    return (keyValStore.getAll());
+  }).then((val) => {
+    callback(val);
   })
-  .then((val) => {
-    return val
-  });
-  // console.log('inside',restaurantFromDb)
-  // return restaurantFromDb
 }
+
+getAllRestaurantsDb((test) =>{
+  console.log(test);
+})
+
 /**
  * Common database helper functions.
  */
@@ -49,22 +58,15 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        storeRestaurantsDb(json);
-        const restaurants = getAllRestaurantsDb();
-        console.log('testing', restaurants);
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
+    fetch(`${DBHelper.DATABASE_URL}`)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(data => callback(null, data))
+        .catch(error => callback(`Request has failed:${error.statusText}`, null));
   }
+
+  
 
   /**
    * Fetch a restaurant by its ID.
