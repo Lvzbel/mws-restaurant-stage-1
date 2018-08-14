@@ -25,8 +25,8 @@ if (navigator.serviceWorker) {
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
-document.addEventListener('DOMContentLoaded', (event) => {
-  fetchNeighborhoods();
+document.addEventListener('DOMContentLoaded', async (event) => {
+  await fetchNeighborhoods();
   fetchCuisines();
 });
 
@@ -34,14 +34,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
  * Fetch all neighborhoods and set their HTML.
  */
 fetchNeighborhoods = () => {
-  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
-    if (error) { // Got an error
-      console.error(error);
-    } else {
-      self.neighborhoods = neighborhoods;
+  // DONE
+  DBHelper.fetchNeighborhoods(neighborhoods)
+    .then((results) => {
+      self.neighborhoods = results;
       fillNeighborhoodsHTML();
-    }
-  });
+    }).catch((err) => {
+      console.log(err);
+    })
 }
 
 /**
@@ -60,15 +60,16 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
 /**
  * Fetch all cuisines and set their HTML.
  */
-fetchCuisines = () => {
-  DBHelper.fetchCuisines((error, cuisines) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      self.cuisines = cuisines;
+fetchCuisines = (cuisines) => {
+  // DONE
+  DBHelper.fetchCuisines(cuisines)
+    .then((resutls) => {
+      self.cuisines = resutls;
       fillCuisinesHTML();
-    }
-  });
+    })
+    .catch((err) => {
+      console.log(err);
+    })
 }
 
 /**
@@ -113,14 +114,13 @@ updateRestaurants = () => {
 
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
-
-  DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      resetRestaurants(restaurants);
+  // DONE
+  DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood)
+  .then((results) => {
+    resetRestaurants(results);
       fillRestaurantsHTML();
-    }
+  }).catch((err) => {
+    console.log(err);
   })
 }
 
