@@ -13,7 +13,9 @@ const cacheFiles = [
   './css/styles.css',
   './js/dbhelper.js',
   './js/main.js',
-  './js/promiseDb.js'
+  './js/promiseDb.js',
+  './js/restaurant_info.js',
+  './data/restaurants.json'
 ]
 
 self.addEventListener('install', (event) => {

@@ -24,6 +24,7 @@ window.initMap = () => {
  * Get current restaurant from page URL.
  */
 fetchRestaurantFromURL = (callback) => {
+  let restaurant
   if (self.restaurant) { // restaurant already fetched!
     callback(null, self.restaurant)
     return;
@@ -33,17 +34,33 @@ fetchRestaurantFromURL = (callback) => {
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-      self.restaurant = restaurant;
-      if (!restaurant) {
-        console.error(error);
-        return;
-      }
+    DBHelper.fetchRestaurantById(id).then((result) => {
+      restaurant = result
+      self.restaurant = restaurant
       fillRestaurantHTML();
       callback(null, restaurant)
-    });
+    }).catch((err) => {
+      console.log(err)
+    })
   }
 }
+
+
+// DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+//   self.restaurant = restaurant;
+//   if (!restaurant) {
+//     console.error(error);
+//     return;
+//   }
+//   fillRestaurantHTML();
+//   callback(null, restaurant)
+// });
+
+// DBHelper.fetchRestaurantById(id).then((result) => {
+//   self.restaurant = result
+// }).catch((err) => {
+//   console.log(err)
+// })
 
 /**
  * Create restaurant HTML and add it to the webpage
@@ -140,7 +157,7 @@ createReviewHTML = (review) => {
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
-fillBreadcrumb = (restaurant=self.restaurant) => {
+fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
