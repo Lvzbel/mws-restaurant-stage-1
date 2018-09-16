@@ -189,19 +189,22 @@ createRestaurantHTML = (restaurant) => {
   isFavorite.innerHTML = '&hearts;';
   isFavorite.classList.add('isFavorite')
   // Set styles depending if is favorite or not
-  if (restaurant.is_favorite) {
+  if (restaurant.is_favorite === 'true' | restaurant.is_favorite === true) {
     isFavorite.classList.add('yesFav')
-    console.log(`Status for ${restaurant.id} is true`);
-  } else {
+    console.log(`Status for ${restaurant.id} is true ad type is ${typeof(restaurant.is_favorite)}`);
+  } else if(restaurant.is_favorite === 'false' | restaurant.is_favorite === false) {
     isFavorite.classList.remove('yesFav')
-    console.log(`Status for ${restaurant.id} is false`);
+    console.log(`Status for ${restaurant.id} is false ad type is ${typeof(restaurant.is_favorite)}`);
   }
 
   // Updating data base base on favorite status
   isFavorite.onclick = () => {
-    const currentFavStatus = !restaurant.is_favorite;
+    isFavorite.classList.toggle('yesFav')
+    const currentFavStatus = !JSON.parse(restaurant.is_favorite);
+    console.log(currentFavStatus);
     updateFavoriteStatus(restaurant.id, currentFavStatus);
-    isFavorite.classList.toggle('yesFav');
+    restaurant.is_favorite = currentFavStatus
+    console.log(restaurant.is_favorite);
   }
   li.append(isFavorite);
 

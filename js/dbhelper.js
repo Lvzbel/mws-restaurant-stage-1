@@ -46,6 +46,9 @@ async function updateFavoriteStatus(restaurantId, favoriteStatus) {
       resturant.is_favorite = favoriteStatus;
       store.put(resturant);
     });
+
+  await tx.complete;
+  db.close();
 }
 
 class DBHelper {
