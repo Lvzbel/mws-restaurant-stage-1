@@ -21,7 +21,7 @@ gulp.task('watch', () => {
   require('./server.js');
   livereload.listen()
   gulp.watch(CSS_PATH, ['styles'])
-  gulp.watch(SCRIPTS_PATH, ['scripts'])
+  gulp.watch(SCRIPTS_PATH, ['scripts', 'restaurant'])
 });
 
 // =================================================

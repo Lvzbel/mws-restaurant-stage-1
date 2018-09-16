@@ -185,6 +185,26 @@ createRestaurantHTML = (restaurant) => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
+  const isFavorite = document.createElement('button');
+  isFavorite.innerHTML = '&hearts;';
+  isFavorite.classList.add('isFavorite')
+  // Set styles depending if is favorite or not
+  if (restaurant.is_favorite) {
+    isFavorite.classList.add('yesFav')
+    console.log(`Status for ${restaurant.id} is true`);
+  } else {
+    isFavorite.classList.remove('yesFav')
+    console.log(`Status for ${restaurant.id} is false`);
+  }
+
+  // Updating data base base on favorite status
+  isFavorite.onclick = () => {
+    const currentFavStatus = !restaurant.is_favorite;
+    updateFavoriteStatus(restaurant.id, currentFavStatus);
+    isFavorite.classList.toggle('yesFav');
+  }
+  li.append(isFavorite);
+
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
   li.append(neighborhood);
