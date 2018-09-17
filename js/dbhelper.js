@@ -1,10 +1,47 @@
-// let restaurants
-
-// const defineRest = async () => {
-//   const results = await getAllRestaurants()
-//   restaurants =  results
-// }
 async function storeRestaurantsDb(restaurants) {
+  let db = await idb.open('restaurants-db', 1, upgradeDB => upgradeDB.createObjectStore('restaurants', {
+    keyPath: 'id'
+  }))
+
+  let tx = db.transaction('restaurants', 'readwrite')
+  let store = tx.objectStore('restaurants')
+
+  restaurants.forEach(restaurant => {
+    store.put(restaurant)
+  });
+
+  await tx.complete
+  db.close()
+}
+
+async function storeAllReviews(reviews) {
+  let db = await idb.open('reviews-db', 1, upgradeDB => upgradeDB.createObjectStore('reviews', {
+    keyPath: 'id'
+  }))
+
+  let tx = db.transaction('reviews', 'readwrite')
+  let store = tx.objectStore('reviews')
+
+  reviews.forEach(review => {
+    store.put(review)
+  });
+
+  await tx.complete
+  db.close()
+}
+
+async function getAllRestaurants() {
+  let db = await idb.open('restaurants-db', 1)
+
+  let tx = db.transaction('restaurants', 'readonly')
+  let store = tx.objectStore('restaurants')
+
+  let allSavedItems = await store.getAll()
+
+  db.close()
+
+  return allSavedItems
+}async function storeRestaurantsDb(restaurants) {
   let db = await idb.open('restaurants-db', 1, upgradeDB => upgradeDB.createObjectStore('restaurants', {
     keyPath: 'id'
   }))
@@ -33,10 +70,24 @@ async function getAllRestaurants() {
   return allSavedItems
 }
 
+async function getAllReviews() {
+  let db = await idb.open('reviews-db', 1)
+
+  let tx = db.transaction('reviews', 'readonly')
+  let store = tx.objectStore('reviews')
+
+  let allSavedItems = await store.getAll()
+
+  db.close()
+
+  return allSavedItems
+}
+
 async function updateFavoriteStatus(restaurantId, favoriteStatus) {
   await fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${favoriteStatus}`, {
     method: 'PUT'
   });
+
   const db = await idb.open('restaurants-db', 1);
   const tx = db.transaction('restaurants', 'readwrite');
   const store = tx.objectStore('restaurants');
@@ -62,16 +113,32 @@ class DBHelper {
     return `http://localhost:${port}/restaurants`;
   }
 
+  static get REVIEWDATA_URL() {
+    const port = 1337 // Change this to your server port
+    return `http://localhost:${port}/reviews`;
+  }
+
   /**
    * Fetch all restaurants.
    * WORKING
    */
   static async fetchRestaurants() {
-    const response = await fetch(`${DBHelper.DATABASE_URL}`)
+    // Fetch resturants data base
+    const restaurantResponse = await fetch(`${DBHelper.DATABASE_URL}`)
 
-    if (response.status === 200) {
-      const restaurants = await response.json()
+    if (restaurantResponse.status === 200) {
+      const restaurants = await restaurantResponse.json()
+      // store restaurant data base into IndexedDB
       await storeRestaurantsDb(restaurants)
+      // fetch and store all reviews
+      const reviewResponse = await fetch(`${DBHelper.REVIEWDATA_URL}`)
+
+      if (reviewResponse.status === 200) {
+        const reviews = await reviewResponse.json()
+        await storeAllReviews(reviews)
+      } else {
+        throw new Error('Request of reviews has failed')
+      }
       return restaurants
     } else {
       throw new Error('Request of restaurants has failed')

@@ -45,23 +45,6 @@ fetchRestaurantFromURL = (callback) => {
   }
 }
 
-
-// DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-//   self.restaurant = restaurant;
-//   if (!restaurant) {
-//     console.error(error);
-//     return;
-//   }
-//   fillRestaurantHTML();
-//   callback(null, restaurant)
-// });
-
-// DBHelper.fetchRestaurantById(id).then((result) => {
-//   self.restaurant = result
-// }).catch((err) => {
-//   console.log(err)
-// })
-
 /**
  * Create restaurant HTML and add it to the webpage
  */
@@ -84,8 +67,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
+  // fill reviews newer versions now needs restaurant id to passed
+  fillReviewsHTML(restaurant.id);
 }
 
 /**
@@ -111,11 +94,22 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+async function fillReviewsHTML (restaurantId) {
+  let reviews;
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
+  // This function was modified to be able to get allreviews from
+  // indexedDB and filter out by restaurantId
+  const allReviews = await getAllReviews();
+
+    if (allReviews) {
+      const results = allReviews.filter(r => r.restaurant_id == restaurantId);
+      reviews = results
+    } else {
+      throw new Error('Reviews does not exist')
+    }
 
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -140,7 +134,7 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = new Date(review.updatedAt).toDateString();
   li.appendChild(date);
 
   const rating = document.createElement('p');
