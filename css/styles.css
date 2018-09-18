@@ -432,6 +432,7 @@ select:focus {
   box-shadow: 0px 0px 5px 4px rgba(228, 166, 57, 1);
 }
 
+/* Favorite BTN Styles */
 .isFavorite {
   border: none;
   width: 35px;
@@ -443,4 +444,44 @@ select:focus {
 
 .yesFav {
   color: #ff0000;
+}
+
+
+/* Review Form Styles */
+#form-container {
+  width: 95%;
+  margin: 30px auto 0 auto;
+}
+
+#form-title {
+  color: #005e8e;
+}
+
+#reviewer {
+  width: 50%;
+  height: 40px;
+  font-size: 18px;
+}
+
+#review-comments {
+  width: 50%;
+  height: 150px;
+  font-size: 18px;
+}
+
+#rating-selection {
+  width: 50%;
+  height: 40px;
+  background: #fff;
+  border: 1px solid #005e8e;
+  font-size: 18px;
+}
+
+.submit-button {
+  width: 50%;
+  height: 40px;
+  border: none;
+  font-size: 18px;
+  background-color: #005e8e;
+  color: #fff;
 }

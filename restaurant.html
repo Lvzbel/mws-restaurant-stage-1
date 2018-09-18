@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="theme-color" content="#005e8e"/>
+  <meta name="theme-color" content="#005e8e" />
   <title>Restaurant Info</title>
 </head>
 
@@ -22,7 +22,7 @@
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
     <!-- Beginning breadcrumb -->
-    <ul id="breadcrumb" >
+    <ul id="breadcrumb">
       <li><a href="/">Home</a></li>
     </ul>
     <!-- End breadcrumb -->
@@ -31,7 +31,7 @@
   <!-- End header -->
 
   <!-- Beginning main -->
-  <main id="maincontent"  class="restaurant-container">
+  <main id="maincontent" class="restaurant-container">
     <!-- Beginning map -->
     <section id="map-container">
       <div id="map"></div>
@@ -40,14 +40,36 @@
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
       <div id="restaurant-box">
-          <h1 id="restaurant-name"></h1>
-          <img id="restaurant-img">
-          <p id="restaurant-cuisine"></p>
-          <p id="restaurant-address"></p>
-          <table id="restaurant-hours"></table>
+        <h1 id="restaurant-name"></h1>
+        <img id="restaurant-img">
+        <p id="restaurant-cuisine"></p>
+        <p id="restaurant-address"></p>
+        <table id="restaurant-hours"></table>
       </div>
     </section>
     <!-- end restaurant -->
+    <!-- Review Form -->
+    <section id="form-container">
+      <h3 id="form-title">Add New Review</h3>
+      <form id="review-form">
+        <label for="reviewer">Name:</label><br>
+        <input type="text" name="name" id="reviewer"><br>
+
+        <div class="rating-container">
+          <p>Rate:</p>
+          <select aria-label="Rating Selection" name="Rating" id="rating-selection">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <label for="review-comments">Comments:</label><br>
+        <textarea name="comments" id="review-comments"></textarea><br>
+        <button class="submit-button" onclick="addReview()">Add Review</button>
+      </form>
+    </section>
     <!-- Beginning reviews -->
     <section id="reviews-container">
       <ul id="reviews-list"></ul>

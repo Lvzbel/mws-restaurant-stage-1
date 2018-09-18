@@ -94,7 +94,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-async function fillReviewsHTML (restaurantId) {
+async function fillReviewsHTML(restaurantId) {
   let reviews;
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
@@ -104,12 +104,12 @@ async function fillReviewsHTML (restaurantId) {
   // indexedDB and filter out by restaurantId
   const allReviews = await getAllReviews();
 
-    if (allReviews) {
-      const results = allReviews.filter(r => r.restaurant_id == restaurantId);
-      reviews = results
-    } else {
-      throw new Error('Reviews does not exist')
-    }
+  if (allReviews) {
+    const results = allReviews.filter(r => r.restaurant_id == restaurantId);
+    reviews = results
+  } else {
+    throw new Error('Reviews does not exist')
+  }
 
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -173,3 +173,36 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+/**
+ * Get the values from the review form
+ */
+addReview = () => {
+  // Preventing defaul behavior
+  event.preventDefault();
+  // Retriving nessesary data from our form
+  let restaurantId = getParameterByName('id');
+  let name = document.getElementById('reviewer').value;
+  let rating = document.querySelector('#rating-selection option:checked').value;
+  let comments = document.getElementById('review-comments').value
+  const review = {
+    'restaurant_id': restaurantId,
+    'name': name,
+    'rating': rating,
+    'comments': comments
+  }
+  postReview(review);
+}
+
+/**
+ * POST new review
+ */
+ async function postReview(review) {
+  await fetch('http://localhost:1337/reviews', {
+    method: 'POST', 
+    body: JSON.stringify(review),
+    headers:{
+      'Content-Type': 'application/json'
+    }
+  })
+ }
