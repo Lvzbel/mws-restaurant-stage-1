@@ -18,22 +18,34 @@
   }
 
   /**
-   * Store all reviews in IndexedDB
+   * Store reviews by restaurant id in IndexedDB
    */
-  async function storeAllReviews(reviews) {
-    let db = await idb.open('reviews-db', 1, upgradeDB => upgradeDB.createObjectStore('reviews', {
+  async function storeAllReviews(reviews, id) {
+    let db = await idb.open(`reviews-db-id:${id}`, 1, upgradeDB => upgradeDB.createObjectStore(`reviews-id:${id}`, {
       keyPath: 'id'
     }))
 
-    let tx = db.transaction('reviews', 'readwrite')
-    let store = tx.objectStore('reviews')
-
+    let tx = db.transaction(`reviews-id:${id}`, 'readwrite')
+    let store = tx.objectStore(`reviews-id:${id}`)
     reviews.forEach(review => {
       store.put(review)
     });
 
     await tx.complete
     db.close()
+  }
+
+  async function getReviewsByRestaurantId(id) {
+    let db = await idb.open(`reviews-db-id:${id}`, 1)
+
+    let tx = db.transaction(`reviews-id:${id}`, 'readonly')
+    let store = tx.objectStore(`reviews-id:${id}`)
+
+    let allSavedItems = await store.getAll()
+
+    db.close()
+
+    return allSavedItems
   }
 
   /**
@@ -71,35 +83,18 @@
     db.close()
   }
 
-  // async function getAllRestaurants() {
-  //   let db = await idb.open('restaurants-db', 1)
-
-  //   let tx = db.transaction('restaurants', 'readonly')
-  //   let store = tx.objectStore('restaurants')
-
-  //   let allSavedItems = await store.getAll()
-
-  //   db.close()
-
-  //   return allSavedItems
-  // }
-
   /**
-   * Retrive all reviews from IndexedDB
+   * POST new review
    */
-  async function getAllReviews() {
-    let db = await idb.open('reviews-db', 1)
-
-    let tx = db.transaction('reviews', 'readonly')
-    let store = tx.objectStore('reviews')
-
-    let allSavedItems = await store.getAll()
-
-    db.close()
-
-    return allSavedItems
+  async function postReview(review) {
+    await fetch('http://localhost:1337/reviews', {
+      method: 'POST',
+      body: JSON.stringify(review),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   }
-
   /**
    * Update Favorite Status in a restaurant
    */
@@ -122,6 +117,19 @@
     db.close();
   }
 
+  /**
+   * Update Favorite Status in a restaurant
+   */
+  async function fetchReviewsById (id) {
+    let reviewResponse = await fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`)
+    if(reviewResponse.status === 200) {
+      const reviews = await reviewResponse.json()
+      await storeAllReviews(reviews, id)
+      return reviews
+    } else {
+      throw new Error('Resquest of reviews has failed')
+    }
+  }
 
   class DBHelper {
 
@@ -134,10 +142,6 @@
       return `http://localhost:${port}/restaurants`;
     }
 
-    static get REVIEWDATA_URL() {
-      const port = 1337 // Change this to your server port
-      return `http://localhost:${port}/reviews`;
-    }
 
     /**
      * Fetch all restaurants.
@@ -151,15 +155,15 @@
         const restaurants = await restaurantResponse.json()
         // store restaurant data base into IndexedDB
         await storeRestaurantsDb(restaurants)
-        // fetch and store all reviews
-        const reviewResponse = await fetch(`${DBHelper.REVIEWDATA_URL}`)
+        // // fetch and store all reviews
+        // const reviewResponse = await fetch(`${DBHelper.REVIEWDATA_URL}`)
 
-        if (reviewResponse.status === 200) {
-          const reviews = await reviewResponse.json()
-          await storeAllReviews(reviews)
-        } else {
-          throw new Error('Request of reviews has failed')
-        }
+        // if (reviewResponse.status === 200) {
+        //   const reviews = await reviewResponse.json()
+        //   await storeAllReviews(reviews)
+        // } else {
+        //   throw new Error('Request of reviews has failed')
+        // }
         return restaurants
       } else {
         throw new Error('Request of restaurants has failed')
@@ -331,12 +335,3 @@
       return marker;
     }
   }
-
-  // async () => {
-  // Makes initial fetch request and saves it into IndexedDB
-  //   await DBHelper.fetchRestaurants().then((restaurants) =>{
-  //     console.log(restaurants)
-  //   }).catch((err) =>{
-  //     console.log('Error', err);
-  //   })
-  // }

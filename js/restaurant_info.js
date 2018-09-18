@@ -99,10 +99,14 @@ async function fillReviewsHTML(restaurantId) {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
+  title.setAttribute("id", "review-title");
   container.appendChild(title);
   // This function was modified to be able to get allreviews from
-  // indexedDB and filter out by restaurantId
-  const allReviews = await getAllReviews();
+
+  // Fetch all reviews of certain restaurant
+  await fetchReviewsById(restaurantId);
+
+  const allReviews = await getReviewsByRestaurantId(restaurantId);
 
   if (allReviews) {
     const results = allReviews.filter(r => r.restaurant_id == restaurantId);
@@ -177,7 +181,7 @@ getParameterByName = (name, url) => {
 /**
  * Get the values from the review form
  */
-addReview = () => {
+async function addReview() {
   // Preventing defaul behavior
   event.preventDefault();
   // Retriving nessesary data from our form
@@ -191,18 +195,10 @@ addReview = () => {
     'rating': rating,
     'comments': comments
   }
-  postReview(review);
+  await postReview(review);
+  const title = document.getElementById('review-title');
+  title.parentNode.removeChild(title);
+  const reviewsContent = document.getElementById('reviews-list');
+  reviewsContent.innerHTML = "";
+  fillReviewsHTML(restaurantId)
 }
-
-/**
- * POST new review
- */
- async function postReview(review) {
-  await fetch('http://localhost:1337/reviews', {
-    method: 'POST', 
-    body: JSON.stringify(review),
-    headers:{
-      'Content-Type': 'application/json'
-    }
-  })
- }
