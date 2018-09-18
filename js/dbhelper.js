@@ -130,6 +130,19 @@
       throw new Error('Resquest of reviews has failed')
     }
   }
+    /**
+   * Update Favorite Status in a restaurant
+   */
+  const toggleFavClassAndElement = (status, element) => {
+
+    if (status === 'true' | status === true) {
+      element.classList.add('yesFav')
+      element.setAttribute('aria-label', 'remove as favorite')
+    } else  {
+      element.classList.remove('yesFav')
+      element.setAttribute('aria-label', 'remove as favorite')
+    }
+  }
 
   class DBHelper {
 

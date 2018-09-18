@@ -116,12 +116,12 @@ updateRestaurants = () => {
   const neighborhood = nSelect[nIndex].value;
   // DONE
   DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood)
-  .then((results) => {
-    resetRestaurants(results);
+    .then((results) => {
+      resetRestaurants(results);
       fillRestaurantsHTML();
-  }).catch((err) => {
-    console.log(err);
-  })
+    }).catch((err) => {
+      console.log(err);
+    })
 }
 
 /**
@@ -189,22 +189,17 @@ createRestaurantHTML = (restaurant) => {
   isFavorite.innerHTML = '&hearts;';
   isFavorite.classList.add('isFavorite')
   // Set styles depending if is favorite or not
-  if (restaurant.is_favorite === 'true' | restaurant.is_favorite === true) {
-    isFavorite.classList.add('yesFav')
-    console.log(`Status for ${restaurant.id} is true ad type is ${typeof(restaurant.is_favorite)}`);
-  } else if(restaurant.is_favorite === 'false' | restaurant.is_favorite === false) {
-    isFavorite.classList.remove('yesFav')
-    console.log(`Status for ${restaurant.id} is false ad type is ${typeof(restaurant.is_favorite)}`);
-  }
+  toggleFavClassAndElement(restaurant.is_favorite, isFavorite)
 
   // Updating data base base on favorite status
   isFavorite.onclick = () => {
-    isFavorite.classList.toggle('yesFav')
+    // isFavorite.classList.toggle('yesFav')
     const currentFavStatus = !JSON.parse(restaurant.is_favorite);
     console.log(currentFavStatus);
     updateFavoriteStatus(restaurant.id, currentFavStatus);
     restaurant.is_favorite = currentFavStatus
-    console.log(restaurant.is_favorite);
+    // Set styles depending if is favorite or not
+    toggleFavClassAndElement(restaurant.is_favorite, isFavorite)
   }
   li.append(isFavorite);
 
