@@ -90,9 +90,9 @@
     await fetch('http://localhost:1337/reviews', {
       method: 'POST',
       body: JSON.stringify(review),
-      headers: {
+      headers: new Headers({
         'Content-Type': 'application/json'
-      }
+      })
     })
   }
   /**
@@ -120,9 +120,9 @@
   /**
    * Update Favorite Status in a restaurant
    */
-  async function fetchReviewsById (id) {
+  async function fetchReviewsById(id) {
     let reviewResponse = await fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`)
-    if(reviewResponse.status === 200) {
+    if (reviewResponse.status === 200) {
       const reviews = await reviewResponse.json()
       await storeAllReviews(reviews, id)
       return reviews
@@ -333,5 +333,50 @@
         animation: google.maps.Animation.DROP
       });
       return marker;
+    }
+
+    static async sendOfflineData(review) {
+      // Store the review on local storage
+      localStorage.setItem('data', JSON.stringify(review));
+
+      // Build temporary UI and append to the already list of reviews
+      const ul = document.getElementById('reviews-list');
+      const li = document.createElement('li');
+
+      const name = document.createElement('p');
+      name.innerHTML = review.name;
+      li.appendChild(name)
+
+      const date = document.createElement('p');
+      date.innerHTML = new Date().toDateString();
+      li.appendChild(date);
+
+      const rating = document.createElement('p');
+      rating.innerHTML = `Rating: ${review.rating}`;
+      li.appendChild(rating);
+
+      const comments = document.createElement('p');
+      comments.innerHTML = review.comments;
+      li.appendChild(comments);
+
+      ul.appendChild(li)
+
+      // Show Offline Alert
+      const offlineAlert = document.getElementById("offline-alert")
+      offlineAlert.style.display = "block";
+
+      // Wait until client is back online
+      window.addEventListener('online', (event) => {
+        // Getting data from localStorage
+        let review = JSON.parse(localStorage.getItem('data'))
+        // Sending review to the server
+        postReview(review)
+
+        // Remove offline notitication
+        offlineAlert.style.display = "none";
+
+        // Remove localStorage data
+        localStorage.removeItem('data')
+      })
     }
   }

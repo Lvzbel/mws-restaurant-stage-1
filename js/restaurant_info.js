@@ -195,6 +195,13 @@ async function addReview() {
     'rating': rating,
     'comments': comments
   }
+
+  // Checking if client is online
+  if (!navigator.onLine) {
+    DBHelper.sendOfflineData(review);
+    return;
+  }
+  
   await postReview(review);
   const title = document.getElementById('review-title');
   title.parentNode.removeChild(title);

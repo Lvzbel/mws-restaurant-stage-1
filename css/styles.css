@@ -485,3 +485,11 @@ select:focus {
   background-color: #005e8e;
   color: #fff;
 }
+
+/* Offline Alert */
+#offline-alert {
+  color: #ff0000;
+  margin: 20px 0 -10px 0;
+  z-index: 999;
+  display: none;
+}
