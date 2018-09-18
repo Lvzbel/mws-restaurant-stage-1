@@ -88,6 +88,23 @@ gulp.task('restaurant', function (){
     .pipe(livereload())
 })
 
+gulp.task('promiseDB', function (){
+  console.log('Starting scrips task')
+
+  return gulp.src(['js/promiseDb.js'])
+    .pipe(plumber(function (err) {
+      console.log('Scripts Task Error!');
+      console.log(err);
+      this.emit('end');
+    }))
+    .pipe(sourcemaps.init())
+    .pipe(uglify())
+    .pipe(concat('promiseDb.js'))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(DIST_PATH))
+    .pipe(livereload())
+})
+
 // =================================================
 // Images will resize and compress all responsive images
 // =================================================

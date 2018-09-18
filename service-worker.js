@@ -12,12 +12,8 @@ const cacheFiles = [
   './dist/restaurants.js',
   './dist/restaurant.js',
   './dist/styles.css',
-  // './css/responsive.css',
-  // './css/styles.css',
-  // './js/dbhelper.js',
-  // './js/main.js',
-  './js/promiseDb.js',
-  // './js/restaurant_info.js',
+  './js/lazysizes.min.js',
+  './dist/promiseDb.js',
   './data/restaurants.json'
 ]
 

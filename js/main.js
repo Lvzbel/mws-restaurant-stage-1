@@ -164,12 +164,15 @@ createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   const figCaption = document.createElement('figcaption');
 
+  sourceLarge.setAttribute('class', 'lazyload');
   sourceLarge.setAttribute('media', '(min-width: 501px)');
-  sourceLarge.setAttribute('srcset', `${imageID}_large_2x.jpg 2x, ${imageID}_large_1x.jpg`);
+  sourceLarge.setAttribute('data-srcset', `${imageID}_large_2x.jpg 2x, ${imageID}_large_1x.jpg`);
+  sourceSmall.setAttribute('class', 'lazyload');
   sourceSmall.setAttribute('media', '(max-width: 500px)');
-  sourceSmall.setAttribute('srcset', `${imageID}_small_2x.jpg 2x, ${imageID}_small_1x.jpg`);
-  image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  sourceSmall.setAttribute('data-srcset', `${imageID}_small_2x.jpg 2x, ${imageID}_small_1x.jpg`);
+  image.className = 'restaurant-img lazyload';
+  image.setAttribute('data-src', `${DBHelper.imageUrlForRestaurant(restaurant)}`);
+  // image.src = DBHelper.imageUrlForRestaurant(restaurant);
   image.setAttribute("alt", restaurant.name)
   figCaption.textContent = restaurant.name;
   figure.append(picture);
