@@ -9,12 +9,11 @@ const cacheFiles = [
   './',
   './index.html',
   './restaurant.html',
-  './dist/restaurants.js',
-  './dist/restaurant.js',
+  './dist/restaurants-min.js',
+  './dist/restaurant_info-min.js',
   './dist/styles.css',
   './js/lazysizes.min.js',
-  './dist/promiseDb.js',
-  './data/restaurants.json'
+  './dist/promiseDb-min.js',
 ]
 
 self.addEventListener('install', (event) => {

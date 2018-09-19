@@ -3,11 +3,12 @@ const responsive = require('gulp-responsive');
 const rename = require("gulp-rename");
 const livereload = require('gulp-livereload');
 const concat = require('gulp-concat');
-const minifyCss = require('gulp-minify-css');
+const cssnano = require('gulp-cssnano');
 const autoprefixer = require('gulp-autoprefixer');
 const plumber = require('gulp-plumber');
 const sourcemaps =  require('gulp-sourcemaps');
 let uglify = require('gulp-uglify-es').default;
+const minify = require('gulp-minify');
 
 // FILE PATHS
 const DIST_PATH = 'dist/'
@@ -41,7 +42,7 @@ gulp.task('styles', () => {
           cascade: false
       }))
   .pipe(concat('styles.css'))
-  .pipe(minifyCss())
+  .pipe(cssnano())
   .pipe(sourcemaps.write())
   .pipe(gulp.dest(DIST_PATH))
   .pipe(livereload())
@@ -50,7 +51,7 @@ gulp.task('styles', () => {
 // =================================================
 // JavaScript compression
 // =================================================
-gulp.task('scripts', ['restaurants', 'restaurant'], () => {
+gulp.task('scripts', ['restaurants', 'restaurant', 'promiseDB'], () => {
   // Will run the two scripts right below
   })
 
@@ -67,6 +68,7 @@ gulp.task('restaurants', function (){
     .pipe(uglify())
     .pipe(concat('restaurants.js'))
     .pipe(sourcemaps.write())
+    .pipe(minify())
     .pipe(gulp.dest(DIST_PATH))
     .pipe(livereload())
 })
@@ -82,8 +84,8 @@ gulp.task('restaurant', function (){
     }))
     .pipe(sourcemaps.init())
     .pipe(uglify())
-    .pipe(concat('restaurant.js'))
     .pipe(sourcemaps.write())
+    .pipe(minify())
     .pipe(gulp.dest(DIST_PATH))
     .pipe(livereload())
 })
@@ -99,8 +101,8 @@ gulp.task('promiseDB', function (){
     }))
     .pipe(sourcemaps.init())
     .pipe(uglify())
-    .pipe(concat('promiseDb.js'))
     .pipe(sourcemaps.write())
+    .pipe(minify())
     .pipe(gulp.dest(DIST_PATH))
     .pipe(livereload())
 })
