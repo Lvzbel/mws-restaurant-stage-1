@@ -87,6 +87,18 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
 }
 
 /**
+ * Will initialize Goggle Map and will hide fake map
+ */
+
+const fakeMap = document.getElementById('map-button').addEventListener('click', () => {
+  const toggleContainer = document.getElementById('toggle-container');
+  const googleMapContainer = document.getElementById('map-container')
+
+  toggleContainer.classList.add('hide-container');
+  googleMapContainer.classList.add('show-container');
+})
+
+/**
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {

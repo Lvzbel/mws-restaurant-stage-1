@@ -493,3 +493,40 @@ select:focus {
   z-index: 999;
   display: none;
 }
+
+/* Map Test */
+#map-container {
+  display: none;
+}
+
+.hide-container {
+  display: none !important;
+}
+
+.show-container {
+  display: inline !important;
+}
+
+#toggle-container {
+  overflow: hidden;
+}
+
+#map-button {  
+  display: flex;
+  height: 400px;
+  width: 100%;
+  background-color: #ccc;
+}
+
+#static-map {
+  margin: auto;
+  opacity: 0.7;
+}
+
+#map-button p {
+  margin: 0 auto 0 auto;
+  text-align: center;
+  color: #333;
+  z-index: 9000;
+  position: absolute;
+}
